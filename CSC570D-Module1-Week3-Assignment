@@ -1,0 +1,239 @@
+
+# coding: utf-8
+
+# # Course: CSC570D - Data Science Essentials
+# # Assignment: Module 1/Week 3 Converting Data To Features
+# # Subject:  Titanic EDA Lab
+# 
+# ## Author: Trudy Kline
+# ## Date: 13 Sep 2015
+# 
+# ### Data Set:  train.csv
+# 
+# ###Assignment Overview:
+# For each variable (except name), know the following information:
+# 
+# 1. Is the variable categorical or continuous
+# 2. Are there missing values?
+# 3. Min, Max, Mean, and Standard Deviation of the continuous variables.
+# 4. Histograms describing the distribution of the variable.
+# 5. EDA should be completed for these fields:  'PassengerId', 'Survived', 'Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin', and 'Embarked'
+# 
+
+# In[7]:
+
+# Read the file using pandas and verify the shape
+import pandas as pd
+get_ipython().magic(u'pylab inline')
+get_ipython().magic(u'matplotlib inline')
+
+df = pd.read_csv("c:\Anaconda\DataFiles/train.csv")
+df.shape
+
+
+# ## Question 1: Is the variable categorical or continuous?
+
+# In[162]:
+
+df.PassengerId.unique()
+
+
+# In[163]:
+
+df.Survived.unique()
+
+
+# In[164]:
+
+df.Pclass.unique()
+
+
+# In[165]:
+
+df.Sex.unique()
+
+
+# In[166]:
+
+df.Age.unique()
+
+
+# In[167]:
+
+df.SibSp.unique()
+
+
+# In[168]:
+
+df.Parch.unique()
+
+
+# In[169]:
+
+df.Ticket.unique()
+
+
+# In[170]:
+
+df.Fare.unique()
+
+
+# In[171]:
+
+df.Cabin.unique()
+
+
+# In[172]:
+
+df.Embarked.unique()
+
+
+# ## Question 1 Answer:
+# 
+# 1. PassengerId is Continuous
+# 2. Survived is Categorical (0 = No, 1 = Yes)
+# 3. Pclass (Passenger Class) is Categorical (1 = 1st, 2 = 2nd, 3 = 3rd)
+# 4. Sex is Categorical
+# 5. Age is Continuous
+# 6. SibSp (Number of Siblings/Spouses Aboard) is Continuous
+# 7. Parch (Number of Parents/Children Aboard) is Continuous
+# 8. Ticket (Ticket Number) is Continuous
+# 9. Fare (Passenger Fare) is Continuous
+# 10. Cabin is Categorical
+# 11. Embarked (Port of Embarkation) is Categorical (C = Cherbourg, Q = Queenstown, S = Southampton)
+# 
+# ## Question 2: Are there missing values?
+
+# In[173]:
+
+col = 0
+x = 1
+for i in df.columns:
+    if df.columns.values[col] <> 'Name':
+        if df[i].isnull().sum() == 0:
+            print x, '-', df.columns.values[col], 'has no missing values'
+        else:
+            print x, '-', df.columns.values[col], 'has missing values'
+        x = x + 1
+    col = col + 1
+
+
+# ## Question 3: Min, Max, Mean, and Standard Deviation of the continuous variables.
+
+# In[174]:
+
+df['PassengerId'].describe()
+
+
+# In[175]:
+
+df['Age'].describe()
+
+
+# In[176]:
+
+df['SibSp'].describe()
+
+
+# In[177]:
+
+df['Parch'].describe()
+
+
+# In[178]:
+
+df['Ticket'].describe()
+
+
+# In[179]:
+
+df['Fare'].describe()
+
+
+# ## Question 4: Histograms describing the distribution of the variable.
+
+# In[180]:
+
+df['PassengerId'].hist()
+
+
+# In[196]:
+
+df['Survived'].hist()
+
+
+# In[182]:
+
+df['Pclass'].hist()
+
+
+# In[194]:
+
+df['Sex'].value_counts().plot(kind='bar')
+
+
+# In[183]:
+
+df['Age'].hist()
+
+
+# In[184]:
+
+df['SibSp'].hist()
+
+
+# In[185]:
+
+df['Parch'].hist()
+
+
+# In[197]:
+
+df['Ticket'].value_counts().plot(kind='bar')
+
+
+# In[187]:
+
+df['Fare'].hist()
+
+
+# In[209]:
+
+df['Cabin'].value_counts().plot(kind='bar')
+
+
+# #### Alternate histogram for Cabin assumes the first character of Cabin specifies the type / section / area of the ship.  Histogram shows the distribution by this type
+
+# In[51]:
+
+listCabinType = ["NAN"]
+listCabinTypeCount = [0]
+
+for i in df['Cabin']:
+    strCabin = str(i)
+    if strCabin == "nan":
+        strCabinType = "NAN"
+    else:
+        strCabinType = strCabin[0]
+    
+    found = False
+    c = 0
+    for x in listCabinType:
+        if x == strCabinType:
+            listCabinTypeCount[c] = listCabinTypeCount[c] + 1
+            found = True
+        c = c + 1
+    
+    if found == False:
+        listCabinType.append(strCabinType)
+        listCabinTypeCount.append(1)
+           
+x = np.arange(len(listCabinType))
+
+plt.bar(x, listCabinTypeCount)
+plt.xticks(x + 0.5, listCabinType, rotation=90)
+
+
+# In[52]:
+
+df['Embarked'].value_counts().plot(kind='bar')
